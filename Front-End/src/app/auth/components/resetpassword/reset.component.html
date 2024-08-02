@@ -1,0 +1,61 @@
+<div class="warn-icon"><i class="fas fa-exclamation-triangle fa-3x"></i></div>
+<mat-card-title>
+  Change Password
+</mat-card-title>
+<mat-divider></mat-divider>
+<mat-card-content>
+  <form novalidate [formGroup]="resetForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <p>
+      <span class="info">Enter the new password for your account.</span>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Email </mat-label>
+        <input type="text"
+               matInput
+               placeholder="type your email"
+               formControlName="email"
+               [readonly]="true" />
+        <mat-icon matSuffix><i class="fas fa-envelope"></i></mat-icon>
+      </mat-form-field>
+    </p>
+    <hr>
+    <p>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Password</mat-label>
+        <input type="password"
+               matInput
+               #input
+               placeholder="type your password (min 8 characters)"
+               formControlName="newPassword"/>
+        <mat-icon matSuffix><i class="fas fa-key"></i></mat-icon>
+        <mat-error class="error" *ngIf="resetForm.controls.newPassword.hasError('required')">
+          Password is <strong>required.</strong>
+        </mat-error>
+        <mat-error class="error" *ngIf="resetForm.controls.newPassword.hasError('minlength')">
+          Password must be at least <strong>8 characters. ({{input.value?.length || 0}}/8)</strong>
+        </mat-error>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Repeat Password</mat-label>
+        <input type="password"
+               matInput
+               placeholder="repeat your password"
+               formControlName="confirmPassword"/>
+        <mat-icon matSuffix><i class="fas fa-key"></i></mat-icon>
+        <mat-error class="error" *ngIf="resetForm.controls.confirmPassword.invalid">
+          Passwords don't <strong>match.</strong>
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <button [disabled]="!resetForm.valid"
+            mat-raised-button
+            class="action-btn"
+            type="submit"
+            color="warn">
+      Change Password
+    </button>
+  </form>
+
+</mat-card-content>

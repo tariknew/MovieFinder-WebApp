@@ -1,0 +1,9 @@
+<div class="poster-container">
+  <ng-container *ngFor="let movie of movieData; let i = index">
+    <app-poster
+      [posterImgUrl]="getMovieImage(movie.image)"
+      [routerLink]="['/movies', movie.id, { backurl: 'movies' }]"
+      class="poster"
+    ></app-poster>
+  </ng-container>
+</div>

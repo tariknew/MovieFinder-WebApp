@@ -1,0 +1,163 @@
+﻿<div class="container" *ngIf="movie; else notfound">
+  <h1>
+    <p>
+      {{ movie.title }}
+    </p>
+  </h1>
+  <div class="cover-and-trailer">
+    <div class="img-container">
+      <img [src]="getMovieImage(movie.image)"/>
+    </div>
+    <div class="trailer-section">
+      <div *ngIf="trailerUrl">
+        <iframe width="100%" height="315" [src]="trailerUrl" frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+  <!-- Ostali detalji filma ispod cover slike i trailera -->
+  <div class="card">
+    <mat-card>
+      <p class="movie-storyline">
+        {{ movie.storyLine }}
+      </p>
+      <div class="price-section">
+        <div class="favorite-button" (click)="toggleFavorite()" (mouseover)="showTooltip = true" (mouseleave)="showTooltip = false">
+          <mat-icon class="heart-icon" [ngClass]="{ 'favorite-color': isFavorite }">favorite</mat-icon>
+          <span *ngIf="showTooltip" class="tooltip">{{ isFavorite ? 'Remove from favorites' : 'Add to favorites' }}</span>
+        </div>
+        <h2 class="price">
+          Price: {{ movie.formattedPrice }}
+        </h2>
+      </div>
+
+
+      <hr/>
+      <p>
+        <span class="param">Director:</span>
+        {{ movie.directorName }}
+      </p>
+      <p>
+        <span class="param">Release date:</span>
+        {{ movie.formattedReleaseDate }}
+      </p>
+      <div class="genre-section">
+        <p>
+          <span class="param">Categories: </span>
+          <mat-chip-list style="display: inline-block; ">
+            <!-- Split razdvaja string na osnovu zareza -->
+            <!-- A trim uklanja razmake sa pocetka i kraja stringa -->
+            <ng-container *ngFor="let category of movie.categoriesNames.split(',')">
+              <mat-chip [ngClass]="'custom-chip'" color="warn" selected>{{ category.trim() }}</mat-chip>
+            </ng-container>
+          </mat-chip-list>
+        </p>
+      </div>
+      <p>
+        <span class="param">
+          Movie Rating:
+         <app-star [rating]="movie.averageScore" [ngClass]="'imdb-star'"></app-star>
+         <span class="average-score">{{ movie.averageScore || 0 }}</span>
+          <span class="arrow">/5</span>
+        </span>
+      </p>
+      <button mat-raised-button color="warn" class="back-button" (click)="onBack()">
+        <i class="fa fa-chevron-left"></i>
+        Back
+      </button>
+      <hr class="custom-hr"/>
+    </mat-card>
+    <div class="card">
+      <mat-card>
+        <h2 class="main-actors">
+          {{ movie.movieActors && movie.movieActors.length === 0 ? 'No Movie Actors' : 'Some Of The Main Actors' }}
+        </h2>
+        <div class="actors-container" *ngIf="movie">
+          <div class="actors-wrapper">
+            <div *ngFor="let actor of movie.movieActors" class="actors-card">
+              <img class="actors-image" [src]="getActorProfileImage(actor.actorPhoto)" alt=""
+                   (click)="openDialog(actor)"/>
+              <div class="actor-body">
+                <!-- Podaci o imenu i prezimenu se nalaze unutar 'actor' podobjekta -->
+                <!-- Kad pisem actor.actor to znaci da prvo udjem u MovieActors, pa u Actor da uzmem vrijednost! -->
+                <p class="actor-real-name">{{ actor.formattedActorRealName }}</p>
+                <p class="actor-text-as">AS</p>
+                <p class="actor-character-name">{{ actor.characterName }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="custom-hr"/>
+      </mat-card>
+    </div>
+    <div class="card">
+      <mat-card>
+        <h2 class="reviews-count">
+          Reviews: &nbsp;{{ totalReviews }}
+        </h2>
+        <app-search
+          [search]="username"
+          (searchChange)="searchReviewByUserName($event)"
+          [customPlaceholder]="'Search by username'"
+          class="search"
+        ></app-search>
+        <div *ngFor="let reviews of allReviews" class="reviewItem">
+          <div class="top">
+            <div class="clientImage">
+              <img [src]="getProfileImage(reviews.profileImage)" alt="">
+            </div>
+            <span class="clientName">{{ reviews.userName }}</span>
+            <ul>
+              <mat-star-rating [rating]="reviews.score" [starCount]="5" [color]="starColor"></mat-star-rating>
+            </ul>
+          </div>
+          <article>
+            <p class="review"
+               [ngClass]="{ 'break-long-words': reviews.userID === this.userData.userId }">{{ reviews.comment }}</p>
+            <p class="review"
+               [ngClass]="{ 'review-date': reviews.userID === this.userData.userId }">{{ reviews.formattedReviewDate }}</p>
+          </article>
+          <div *ngIf="reviews.userID === this.userData.userId" class="delete-button">
+            <button mat-raised-button color="accent" (click)="onDelete(reviews.id)">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+        <mat-paginator *ngIf="totalReviews && totalReviews > 0"
+                       [length]="totalReviews"
+                       [pageSize]="paginatorForm.value.pageSize"
+                       [hidePageSize]="true"
+                       [showFirstLastButtons]="true"
+                       (page)="onPageChange($event)">
+        </mat-paginator>
+        <hr class="custom-review-hr">
+        <div class="card_write_review">
+          <form novalidate [formGroup]="reviewForm" (ngSubmit)="onSubmit()" autocomplete="off">
+            <mat-star-rating [rating]="rating" [starCount]="starCount" [color]="starColor"
+                             (ratingUpdated)="onRatingChanged($event)"></mat-star-rating>
+            <div><label>Review</label></div>
+            <div>
+              <textarea id="inputComment"
+                        placeholder="Comment (max 81 characters)"
+                        required
+                        matInput
+                        rows="3"
+                        maxlength="81"
+                        name="description"
+                        formControlName="inputComment"
+                        (input)="checkMaxLength($event)"></textarea>
+            </div>
+            <button mat-raised-button color="accent" class="review-button"
+                    [disabled]="!reviewForm.valid || this.rating == 0">
+              <i class="fas fa-save custom-icon"></i>
+              Submit Review
+            </button>
+          </form>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-scroll-top></app-scroll-top>
+<ng-template #notfound>
+  No movie found!
+</ng-template>

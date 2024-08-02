@@ -1,0 +1,61 @@
+.actor-info {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+}
+
+.actor-image {
+  max-width: 170px;
+  height: auto;
+  vertical-align: middle;
+  border-style: none;
+  margin-right: 20px;
+}
+
+.actor-details {
+  flex-direction: column;
+}
+
+.actor-birth,
+.actor-birth-place {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.actor-imdb {
+  color: #e8b700;
+  margin: 0;
+}
+
+.actor-bio {
+  max-width: 600px;
+  margin-top: -10px;
+}
+
+.dialog-divider {
+  border: none;
+  height: 1.5px;
+  background-color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 10px;
+  margin-right: 2px;
+  position: relative;
+  top: -10px;
+}
+
+.biography-title {
+  margin-top: 5px;
+}
+
+.mat-dialog-actions {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.close-button {
+  margin-left: 453px;
+}
+
+::ng-deep .mat-dialog-container {
+  margin-left: 65px;
+}

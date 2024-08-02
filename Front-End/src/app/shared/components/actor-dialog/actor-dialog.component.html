@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>
+  {{ data.formattedActorRealName }}!
+  <button mat-icon-button [mat-dialog-close]="true" class="close-button">
+    <mat-icon aria-label="Close dialog">close</mat-icon>
+  </button>
+</h1>
+<hr class="dialog-divider">
+<div mat-dialog-content>
+  <div class="actor-info">
+    <img [src]="getActorProfileImage(data.actorPhoto)" alt="Actor Photo" class="actor-image">
+    <div class="actor-details">
+      <p class="actor-birth">Birth: {{ data.formattedActorBirthDate }}</p>
+      <p class="actor-birth-place">Birth Place: {{ data.formattedActorBirthPlace }}</p>
+      <a *ngIf="data.actorIMDbLink" [href]="'https://www.imdb.com/name/' + data.actorIMDbLink" target="_blank"
+         class="actor-imdb"
+         title="Visit IMDB">
+        <i class="fab fa-imdb fa-2x"></i>
+      </a>
+    </div>
+  </div>
+</div>
+<h1 mat-dialog-title class="biography-title">Biography</h1>
+<div class="actor-bio">{{ data.actorBiography }}</div>
+
+

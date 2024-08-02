@@ -1,0 +1,28 @@
+<div class="movie_card" id="bright">
+  <div class="info_section">
+    <div class="movie_header">
+      <img class="locandina" [src]="getMovieImage(movie.image)" loading="lazy"/>
+      <h1 [routerLink]="['/movies', movie.id]" class="title">{{movie.title}}</h1>
+      <h4><span class="date">({{ movie.formattedReleaseDate}})</span> {{movie.directorName}}</h4>
+      <span class="minutes">{{movie.formattedDuration}}</span>
+      <p class="mpaa">Price: {{ movie.formattedPrice}}</p>
+    </div>
+    <div class="movie_desc">
+      <p class="text">
+        {{movie.storyLine | slice:0:140}}...
+        <app-star [rating]="movie.averageScore"></app-star>
+      </p>
+    </div>
+    <div class="movie_social">
+      <button mat-raised-button color="warn" style="margin:2px" [routerLink]="['/movies', movie.id ]">
+        <i class="fas fa-info-circle"></i>
+        Details
+      </button>
+      <button mat-raised-button color="accent" style="margin:2px" [routerLink]="['/play', movie.trailerLink]">
+        <i class="fas fa-play-circle fa-2x"></i>
+        <span style="font-size: large; margin-left: 10px;">Trailer</span>
+      </button>
+    </div>
+  </div>
+  <div class="blur_back" [ngStyle]="{'background-image': 'url(' + (getMovieImage(movie.image)) + ')'}" loading="lazy"></div>
+</div>

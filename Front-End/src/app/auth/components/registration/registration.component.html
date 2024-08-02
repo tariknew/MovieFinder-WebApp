@@ -1,0 +1,108 @@
+<div class="lock-icon"><i class="fas fa-user-lock fa-3x"></i></div>
+<mat-card-title>
+  SIGN UP to <span class="title">MovieShop</span>
+</mat-card-title>
+<mat-divider></mat-divider>
+<mat-card-content>
+  <form novalidate [formGroup]="registrationForm" (ngSubmit)="onSubmit()" autocomplete="off">
+    <div *ngIf="registrationStatus === 'error'" class="error-message">
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <p>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Username</mat-label>
+        <input type="text"
+               matInput
+               placeholder="choose a username"
+               formControlName="username" />
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-error class="error" *ngIf="registrationForm.get('username').hasError('required')">
+          Please provide an <strong>username.</strong>
+        </mat-error>
+        <mat-error class="error" *ngIf="registrationForm.get('username').hasError('userNameExists')">
+          <i class="fas fa-exclamation-circle"></i> This Username is taken. Try another.
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Email Address</mat-label>
+        <input type="email"
+               matInput
+               placeholder="type your email"
+               formControlName="email" />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error class="error" *ngIf="registrationForm.get('email').hasError('required')">
+          Please provide an <strong>email.</strong>
+        </mat-error>
+        <mat-error class="error" *ngIf="registrationForm.get('email').hasError('pattern')">
+          Please provide a <strong>valid email address.</strong>
+        </mat-error>
+        <mat-error class="error" *ngIf="registrationForm.get('email').hasError('emailExists')">
+          <i class="fas fa-exclamation-circle"></i> This email address is taken. Try another.
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Password</mat-label>
+        <input #passwordInput
+               matInput
+               type="password"
+               placeholder="type your password (min 8 characters)"
+               formControlName="password"/>
+        <mat-icon matSuffix (click)="togglePasswordVisibility(passwordInput)">
+          <i class="fas" [ngClass]="hidePassword ? 'fa-eye-slash' : 'fa-eye' " style="font-size: 15px"></i>
+        </mat-icon>
+        <mat-error class="error" *ngIf="registrationForm.get('password').hasError('required')">
+          Password is <strong>required.</strong>
+        </mat-error>
+        <mat-error class="error" *ngIf="registrationForm.get('password').hasError('minlength')">
+          Password must be at least <strong>8 characters. ({{passwordInput.value?.length || 0}}/8)</strong>
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="outline" color="warn">
+        <mat-label class="label">Repeat Password</mat-label>
+        <input type="password"
+               matInput
+               placeholder="repeat your password"
+               formControlName="confirmPassword"
+               #confirmPasswordInput/>
+        <mat-icon matSuffix (click)="togglePasswordVisibility(confirmPasswordInput)">
+          <i class="fas" [ngClass]="hidePassword ? 'fa-eye-slash' : 'fa-eye' " style="font-size: 15px"></i>
+        </mat-icon>
+        <mat-error class="error" *ngIf="registrationForm.get('confirmPassword').invalid">
+          Passwords don't <strong>match.</strong>
+        </mat-error>
+      </mat-form-field>
+    </p>
+
+    <div class="terms">
+      <mat-checkbox formControlName="acceptTerms"></mat-checkbox>
+      I accept the
+      <span class="policy" (click)="openTermsDialog()">Terms of Service and Privacy Policy.</span>
+    </div>
+
+    <button [disabled]="loading || !registrationForm.valid || !registrationForm.get('acceptTerms').value"
+            mat-raised-button
+            class="action-btn"
+            type="submit"
+            color="warn">
+      <i *ngIf="loading" class="fas fa-spinner fa-spin fa-1x fa-fw"></i>
+      Sign Up
+    </button>
+    <p>
+      <a [routerLink]="['/auth']" class="back">
+        <i class="fas fa-chevron-left icon"></i> Back to Login
+      </a>
+    </p>
+  </form>
+</mat-card-content>
+
+

@@ -1,0 +1,17 @@
+<h1 class="page-title">Your favorite Movies</h1>
+<div class="movie-list">
+  <div *ngFor="let movie of favoriteMovies" class="movie-item">
+    <a [routerLink]="['/movies', movie.id]">
+      <div class="image-container" (mouseover)="showRemoveButton = true" (mouseleave)="showRemoveButton = false">
+        <img [src]="getMovieImage(movie.image)" alt="{{ movie.title }}">
+        <span>{{ movie.title }}</span>
+        <div class="remove-button" *ngIf="showRemoveButton">
+          <button class="remove-favorite-btn" (click)="removeFromFavorites(movie.id)">
+            <mat-icon>remove</mat-icon>
+          </button>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
